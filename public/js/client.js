@@ -20,7 +20,7 @@
 
 'use strict'; // https://www.w3schools.com/js/js_strict.asp
 
-const isHttps = false; // must be the same on server.js
+const isHttps = true; // must be the same on server.js
 const signalingServer = getSignalingServer();
 const roomId = getRoomId();
 const peerLoockupUrl = 'https://extreme-ip-lookup.com/json/?key=demo2'; // get your API Key at https://extreme-ip-lookup.com
@@ -69,14 +69,14 @@ const chatInputEmoji = {
 // Show desired buttons captionBtn, showSwapCameraBtn, showScreenShareBtn, showFullScreenBtn -> (auto-detected)
 const buttons = {
     main: {
-        showShareRoomBtn: true,
+        showShareRoomBtn: false,
         showAudioBtn: true,
         showVideoBtn: true,
-        showRecordStreamBtn: true,
+        showRecordStreamBtn: false,
         showChatRoomBtn: true,
-        showMyHandBtn: true,
-        showWhiteboardBtn: true,
-        showFileShareBtn: true,
+        showMyHandBtn: false,
+        showWhiteboardBtn: false,
+        showFileShareBtn: false,
         showMySettingsBtn: true,
         showAboutBtn: true, // Please keep me always true, Thank you!
     },
@@ -94,10 +94,11 @@ const buttons = {
         showKickOutBtn: true,
     },
 };
+const speechRecognition = false
 
-const isRulesActive = true; // Presenter can do anything, guest is slightly moderate, if false no Rules for the room.
+const isRulesActive = false; // Presenter can do anything, guest is slightly moderate, if false no Rules for the room.
 
-const surveyActive = true; // when leaving the room give a feedback, if false will be redirected to newcall page
+const surveyActive = false; // when leaving the room give a feedback, if false will be redirected to newcall page
 
 const notifyBySound = true; // turn on - off sound notifications
 
@@ -794,11 +795,11 @@ function handleServerInfo(config) {
         handleRules(isPresenter);
     }
 
-    if (notify && peers_count == 1) {
-        welcomeUser();
-    } else {
-        checkShareScreen();
-    }
+    // if (notify && peers_count == 1) {
+    //    welcomeUser();
+    // } else {
+	checkShareScreen();
+    // }
 }
 
 /**
@@ -1603,9 +1604,10 @@ async function setupLocalMedia() {
     let audioConstraints = useAudio;
     if (useAudio) {
         audioConstraints = {
-            echoCancellation: true,
-            noiseSuppression: true,
-            sampleRate: 44100,
+			autoGainControl: false,
+			echoCancellation: false,
+			noiseSuppression: false,
+			sampleRate: 48000
         };
     }
 
@@ -2979,9 +2981,10 @@ function getAudioVideoConstraints() {
     }
     let audioConstraints = {
         deviceId: audioSource ? { exact: audioSource } : undefined,
-        echoCancellation: true,
-        noiseSuppression: true,
-        sampleRate: 44100,
+		autoGainControl: false,
+		echoCancellation: false,
+		noiseSuppression: false,
+		sampleRate: 48000
     };
     const constraints = {
         audio: audioConstraints,
